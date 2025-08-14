@@ -14,5 +14,5 @@
   "include": [
     "src",
     "scripts"
-  ]
+, "src/commands/fun"  ]
 }

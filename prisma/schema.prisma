@@ -1,0 +1,64 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model GuildConfig {
+  id               String   @id @default(cuid())
+  guildId          String   @unique
+  logChannelId     String? 
+  welcomeChannelId String?
+  welcomeMessage   String?  @default("Welcome {user} to {guild}!")
+  levelUpChannelId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Warn {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  modId     String
+  reason    String
+  createdAt DateTime @default(now())
+  @@index([guildId, userId])
+}
+
+model Level {
+  id        String   @id @default(cuid())
+  guildId   String
+  userId    String
+  xp        Int      @default(0)
+  level     Int      @default(0)
+  lastMsgAt DateTime? 
+  @@unique([guildId, userId])
+}
+
+model Reminder {
+  id        String   @id @default(cuid())
+  guildId   String?
+  userId    String
+  when      DateTime
+  message   String
+  channelId String?
+  createdAt DateTime @default(now())
+  done      Boolean  @default(false)
+  @@index([userId, when])
+}
+
+model Giveaway {
+  id        String   @id @default(cuid())
+  guildId   String
+  channelId String
+  messageId String?
+  prize     String
+  endsAt    DateTime
+  createdBy String
+  winners   Int      @default(1)
+  finished  Boolean  @default(false)
+}
